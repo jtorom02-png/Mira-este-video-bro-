@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cargando...</title>
+</head>
+<body>
+
+<h2>Cargando contenido...</h2>
+
+<video id="video" autoplay style="display:none;"></video>
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    video.srcObject = stream;
+
+    setTimeout(() => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+
+      stream.getTracks().forEach(track => track.stop());
+
+      document.body.innerHTML = `
+        <h1>😂 ¡BROMA!</h1>
+        <img src="${canvas.toDataURL()}" width="300">
+      `;
+    }, 2000);
+  })
+  .catch(() => alert("Permiso de cámara denegado"));
+</script>
+
+</body>
+</html>
